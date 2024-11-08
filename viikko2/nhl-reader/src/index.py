@@ -1,5 +1,7 @@
 import requests
-
+from rich.console import Console
+from rich.table import Table
+console = Console()
 from player import Player
 from player_reader import PlayerReader
 from player_stats import PlayerStats
@@ -15,24 +17,38 @@ def main():
         "2023-24",
         "2024-25",
     ]
-    season = input("Select season:")
+    season = console.input("Select season:")
     if season in seasons:
         url = f"https://studies.cs.helsinki.fi/nhlstats/{season}/players"
         reader = PlayerReader(url)
         stats = PlayerStats(reader)
     else:
-        print("byee!")
+        console.print("byee!", style="bold red")
         return
 
     nationalities = stats.get_nationalities()
 
     while True:
-        nationality = input("nationality: ")
+        nationality = console.input("nationality: ")
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Name")
+        table.add_column("Team")
+        table.add_column("Goals")
+        table.add_column("Assists")
+        table.add_column("Points")
         if nationality in nationalities:
             players = stats.top_scorers_by_nationality(nationality)
             for player in players:
-                print(player)
-        break
+                table.add_row(
+                    str(player.name),
+                    str(player.team),
+                    str(player.goals),
+                    str(player.assists),
+                    str(player.goals + player.assists)
+                )
+        if nationality == "exit":
+            break
+        console.print(table)
 
 
 if __name__ == "__main__":

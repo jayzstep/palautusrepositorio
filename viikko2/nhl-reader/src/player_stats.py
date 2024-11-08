@@ -10,3 +10,10 @@ class PlayerStats:
             key=lambda player: (-(player.goals + player.assists), player.name)
         )
         return nation_players
+
+    def get_nationalities(self):
+        nations = [
+            player.nationality for player in self.players
+        ]
+        set_nations = set(nations)
+        return set_nations

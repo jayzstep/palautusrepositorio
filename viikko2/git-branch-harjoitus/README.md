@@ -1,3 +1,3 @@
 ## Git-harjoittelua
 
-Harjoitellaan branchien käyttöä.
+Harjoitellaan branchien käyttöä. Ja branchien käyttöä.

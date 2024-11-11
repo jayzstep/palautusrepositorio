@@ -17,7 +17,7 @@ def main():
         "2023-24",
         "2024-25",
     ]
-    season = console.input("Select season:")
+    season = console.input(f"Select season [bold red]{'/'.join(seasons)}[/]:")
     if season in seasons:
         url = f"https://studies.cs.helsinki.fi/nhlstats/{season}/players"
         reader = PlayerReader(url)
@@ -29,7 +29,9 @@ def main():
     nationalities = stats.get_nationalities()
 
     while True:
-        nationality = console.input("nationality: ")
+        nationality = console.input(f"Select nationality: [bold red]{'/'.join(nationalities)}[/] ('exit' to quit): ")
+        if nationality == "exit":
+            break
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Name")
         table.add_column("Team")
@@ -46,9 +48,9 @@ def main():
                     str(player.assists),
                     str(player.goals + player.assists)
                 )
-        if nationality == "exit":
-            break
-        console.print(table)
+            console.print(table)
+        else:
+            console.print("nationality not found")
 
 
 if __name__ == "__main__":

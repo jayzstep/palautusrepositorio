@@ -17,3 +17,6 @@ class PlayerStats:
         ]
         set_nations = set(nations)
         return set_nations
+
+
+# omg

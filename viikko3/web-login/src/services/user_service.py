@@ -44,6 +44,10 @@ class UserService:
 
         if password != password_confirmation:
             raise UserInputError("Passwords don't match")
+        if len(password) < 8:
+            raise UserInputError("Password too short")
+        if not any(not c.isalpha() for c in password):
+            raise UserInputError("Password cannot contain only letters")
         if len(username) < 4:
             raise UserInputError("Username too short")
 

@@ -21,17 +21,35 @@ Register With Too Short Username And Valid Password
     Register Should Fail With Message  Username too short
 
 Register With Valid Username And Too Short Password
-# ...
+    Set Username  kalle
+    Set Password  123
+    Set Password Confirmation  123
+    Submit New User
+    Register Should Fail With Message  Password too short
 
 Register With Valid Username And Invalid Password
 # salasana ei sisällä halutunlaisia merkkejä
-# ...
+    Set Username  kalle
+    Set Password  vainkirjaimia
+    Set Password Confirmation  vainkirjaimia
+    Submit New User
+    Register Should Fail With Message  Password cannot contain only letters
 
 Register With Nonmatching Password And Password Confirmation
-# ...
+    Set Username  kalle
+    Set Password  kalle234
+    Set Password Confirmation  kalle235
+    Submit New User
+    Register Should Fail With Message  Passwords don't match
 
 Register With Username That Is Already In Use
-#
+    Create User  kalle  kalle123
+    Set Username  kalle
+    Set Password  kalle234
+    Set Password Confirmation  kalle234
+    Submit New User
+    Register Should Fail With Message  User with username kalle already exists
+    
 
 *** Keywords ***
 Submit New User

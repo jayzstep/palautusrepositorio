@@ -42,5 +42,10 @@ class UserService:
 
         # toteuta loput tarkastukset tänne ja nosta virhe virhetilanteissa
 
+        if password != password_confirmation:
+            raise UserInputError("Passwords don't match")
+        if len(username) < 4:
+            raise UserInputError("Username too short")
+
 
 user_service = UserService()

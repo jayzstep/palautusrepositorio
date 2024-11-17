@@ -50,6 +50,28 @@ Register With Username That Is Already In Use
     Submit New User
     Register Should Fail With Message  User with username kalle already exists
     
+Login After Successful Registration
+    Set Username  kalle
+    Set Password  kalle234
+    Set Password Confirmation  kalle234
+    Submit New User
+    Click Link  ohtu
+    Click Button  logout-button
+    Set Username  kalle
+    Set Password  kalle234
+    Submit Credentials
+    Login Should Succeed
+
+Login After Failed Registration
+    Set Username  kalle
+    Set Password  kalle234
+    Set Password Confirmation  kalle235
+    Submit New User
+    Click Link  Login
+    Set Username  kalle
+    Set Password  kalle234
+    Submit Credentials
+    Login Should Fail With Message  Invalid username or password
 
 *** Keywords ***
 Submit New User

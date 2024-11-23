@@ -164,3 +164,109 @@ class TestKauppa(unittest.TestCase):
         kauppa.tilimaksu('Jasse', '98765')
 
         mock_pankki.tilisiirto.assert_called_with('Jasse', 42, '98765', ANY, 5)
+
+    def test_ostoksen_paatyttya_tilisiirto_kutsutaan_oikealla_summalla(self):
+        mock_pankki = Mock()
+        mock_viitegeneraattori = Mock()
+
+        mock_viitegeneraattori.uusi.return_value = 42
+
+        mock_varasto = Mock()
+
+        def varasto_saldo(tuote_id):
+            if tuote_id == 1:
+                return 10
+            if tuote_id == 2:
+                return 5
+
+        def varasto_tuote(tuote_id):
+            if tuote_id == 1:
+                return Tuote(1, 'maito', 5)
+            if tuote_id == 2:
+                return Tuote(2,'leipä', 7)
+
+        mock_varasto.saldo.side_effect = varasto_saldo
+        mock_varasto.hae_tuote.side_effect = varasto_tuote
+
+
+        kauppa = Kauppa(mock_varasto, mock_pankki, mock_viitegeneraattori)
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(1)
+        kauppa.lisaa_koriin(1)
+        kauppa.lisaa_koriin(2)
+        kauppa.poista_korista(1)
+        kauppa.tilimaksu('Jasse', '98765')
+
+        mock_pankki.tilisiirto.assert_called_with('Jasse', 42, '98765', ANY, 12)
+        
+    def test_ostoksen_aluksi_ostoskori_nollattu(self):
+        mock_pankki = Mock()
+        mock_viitegeneraattori = Mock()
+
+        mock_viitegeneraattori.uusi.return_value = 42
+
+        mock_varasto = Mock()
+
+        def varasto_saldo(tuote_id):
+            if tuote_id == 1:
+                return 10
+            if tuote_id == 2:
+                return 5
+
+        def varasto_tuote(tuote_id):
+            if tuote_id == 1:
+                return Tuote(1, 'maito', 5)
+            if tuote_id == 2:
+                return Tuote(2,'leipä', 7)
+
+        mock_varasto.saldo.side_effect = varasto_saldo
+        mock_varasto.hae_tuote.side_effect = varasto_tuote
+
+
+        kauppa = Kauppa(mock_varasto, mock_pankki, mock_viitegeneraattori)
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(1)
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(2)
+        kauppa.tilimaksu('Jasse', '98765')
+
+        mock_pankki.tilisiirto.assert_called_with('Jasse', 42, '98765', ANY, 7)
+
+    def test_ostoksen_lopuksi_viitenumeroa_kasvatetaan(self):
+        mock_pankki = Mock()
+        mock_viitegeneraattori = Mock()
+
+        mock_viitegeneraattori.uusi.return_value = 42
+
+        mock_varasto = Mock()
+
+        def varasto_saldo(tuote_id):
+            if tuote_id == 1:
+                return 10
+
+        def varasto_tuote(tuote_id):
+            if tuote_id == 1:
+                return Tuote(1, 'maito', 5)
+
+        mock_varasto.saldo.side_effect = varasto_saldo
+        mock_varasto.hae_tuote.side_effect = varasto_tuote
+
+
+        kauppa = Kauppa(mock_varasto, mock_pankki, mock_viitegeneraattori)
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(1)
+        kauppa.tilimaksu('Jasse', '98765')
+
+        self.assertEqual(mock_viitegeneraattori.uusi.call_count, 1)
+
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(1)
+        kauppa.tilimaksu('Jasse', '98765')
+
+        self.assertEqual(mock_viitegeneraattori.uusi.call_count, 2)
+
+        kauppa.aloita_asiointi()
+        kauppa.lisaa_koriin(1)
+        kauppa.tilimaksu('Jasse', '98765')
+
+        self.assertEqual(mock_viitegeneraattori.uusi.call_count, 3)

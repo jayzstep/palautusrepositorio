@@ -10,6 +10,19 @@ class And:
         return True
 
 
+class Or:
+    def __init__(self, *matchers):
+        self._matchers = matchers
+
+    def test(self, player):
+        flag = False
+
+        for matcher in self._matchers:
+            if matcher.test(player):
+                flag = True
+        return flag
+
+
 class PlaysIn:
     def __init__(self, team):
         self._team = team
@@ -29,11 +42,6 @@ class HasAtLeast:
         return player_value >= self._value
 
 
-# All (tosi kaikille pelaajille)
-# Not (parametrina olevan ehdon negaatio)
-# HasFewerThan (HasAtLeast-komennon negaatio eli esim. on vähemmän kuin 10 maalia)
-
-
 class All:
     def __init__(self):
         pass
@@ -41,12 +49,14 @@ class All:
     def test(self, player):
         return True
 
+
 class Not:
     def __init__(self, ehto):
         self.ehto = ehto
 
     def test(self, player):
         return not self.ehto.test(player)
+
 
 class HasFewerThan:
     def __init__(self, value, attr):

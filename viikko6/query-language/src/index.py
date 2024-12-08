@@ -39,8 +39,7 @@ def main():
     # print(len(filtered_with_all))
 
     query = QueryBuilder()
-    matcher = query.plays_in("NYR").build()
-
+    matcher = query.plays_in("NYR").has_at_least(10, "goals").has_fewer_than(20, "goals").build()
     for player in stats.matches(matcher):
         print(player)
 

@@ -40,15 +40,18 @@ class TennisGame:
     def handle_score(self):
         point_names = {
             self.LOVE: "Love",
-            self.FIFTEEN: "Fifteen", 
+            self.FIFTEEN: "Fifteen",
             self.THIRTY: "Thirty",
-            self.FORTY: "Forty"
+            self.FORTY: "Forty",
         }
         return f"{point_names[self.player1_points]}-{point_names[self.player2_points]}"
 
     def get_score(self):
         if self.player1_points == self.player2_points:
             return self.handle_tie()
-        if self.player1_points >= self.MIN_FOR_WIN or self.player2_points >= self.MIN_FOR_WIN:
+        if (
+            self.player1_points >= self.MIN_FOR_WIN
+            or self.player2_points >= self.MIN_FOR_WIN
+        ):
             return self.handle_advantage()
         return self.handle_score()
